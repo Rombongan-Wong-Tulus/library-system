@@ -37,23 +37,30 @@ class Application
         $rentals = new RentalService($mediaRepo, $trxRepo);
 
         $catalog = new CatalogController($view, $auth, $mediaRepo);
-        $authCtl = new AuthController($view, $auth);
+        $authCtl = new AuthController($view, $auth, $userRepo, $trxRepo, $mediaRepo);
         $rental = new RentalController($view, $auth, $rentals, $trxRepo, $mediaRepo);
         $admin = new AdminController($view, $auth, $mediaRepo, $trxRepo, $userRepo);
 
         $this->routes = [
             'GET catalog' => [$catalog, 'index'],
+            'GET media' => [$catalog, 'show'],
             'GET login' => [$authCtl, 'showLogin'],
             'POST login' => [$authCtl, 'login'],
             'GET register' => [$authCtl, 'showRegister'],
             'POST register' => [$authCtl, 'register'],
             'POST logout' => [$authCtl, 'logout'],
+            'GET profile' => [$authCtl, 'profile'],
+            'POST upgrade-plan' => [$authCtl, 'upgradePlan'],
             'GET rentals' => [$rental, 'myRentals'],
             'POST rent' => [$rental, 'rent'],
             'POST return' => [$rental, 'giveBack'],
             'GET admin' => [$admin, 'dashboard'],
+            'GET admin-edit' => [$admin, 'editMediaForm'],
+            'POST admin-update' => [$admin, 'updateMedia'],
             'POST admin-add' => [$admin, 'addMedia'],
             'POST admin-delete' => [$admin, 'deleteMedia'],
+            'GET admin-members' => [$admin, 'members'],
+            'POST admin-user-role' => [$admin, 'updateUserRole'],
         ];
         $this->view = $view;
     }
