@@ -1,4 +1,4 @@
-# Lembar — Prototipe Sewa E-book (UTS Pemrograman Web 2026/2027)
+# Lembar — Sewa E-book (UTS Pemrograman Web 2026/2027)
 
 Aplikasi web tanpa framework: front-end HTML/CSS/JS + backend PHP 8.x OOP.
 Penyimpanan data memakai file JSON di folder `data/`.
@@ -83,27 +83,9 @@ library-system/
 
 Lama sewa 1–14 hari. Denda keterlambatan Rp 1.000 per hari.
 
-## Pembagian tugas (kelompok 4 orang)
-
-| Anggota | Fokus | Berkas utama |
-|---|---|---|
-| A — Backend model | OOP inti | `src/Contracts`, `src/Models`, `src/Factories` |
-| B — Backend logika | Penyimpanan & aturan bisnis | `src/Storage`, `src/Repositories`, `src/Services`, `src/Exceptions` |
-| C — Controller & routing | Alur halaman | `src/Controllers`, `src/Core`, `index.php` |
-| D — Front-end | Tampilan & JS | `views/`, `assets/` |
-
-Kelompok 3 orang: gabungkan A dan B.
-
 ## Alur kerja Git yang disarankan
 
 1. Satu orang membuat repo dan push struktur ini ke branch `main`.
 2. Tiap anggota membuat branch `fitur/nama-fitur`, lalu pull request ke `main`.
 3. Jangan edit file yang sama bersamaan; ikuti tabel pembagian tugas.
 4. `data/*.json` jangan di-commit setelah dipakai uji coba (sudah ada di `.gitignore`).
-
-## Ide pengembangan (nilai tambah)
-
-- Pencarian di sisi server dan paginasi.
-- Trait `Timestampable` untuk `created_at`.
-- Unit test sederhana untuk `getRentalPrice()`.
-- Halaman detail media dan tombol "baca" (mock).
