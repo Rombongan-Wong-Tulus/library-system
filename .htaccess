@@ -1,0 +1,22 @@
+# Cegah browsing direktori
+Options -Indexes
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # ponytail: proteksi akses web ke folder backend & source code
+    RewriteRule ^(src|views|data|tests|docs|\.git)(/.*)?$ - [F,L]
+
+    # Blokir berkas dokumentasi, data, lock, dan dotfiles
+    RewriteRule \.(md|json|lock)$ - [F,L]
+    RewriteRule (^|/)\. - [F,L]
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+    <FilesMatch "\.(md|json|lock)$">
+        <IfModule mod_authz_core.c>
+            Require all denied
+        </IfModule>
+    </FilesMatch>
+</IfModule>

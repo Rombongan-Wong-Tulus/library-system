@@ -7,8 +7,9 @@ Penyimpanan data memakai file JSON di folder `data/`.
 
 Syarat: PHP 8.1 atau lebih baru.
 
+### Menggunakan Built-in PHP Server (CLI)
 ```bash
-php -S localhost:8000 -t public
+php -S localhost:8000 router.php
 ```
 
 Buka http://localhost:8000
@@ -19,15 +20,16 @@ Akun admin otomatis dibuat saat pertama dijalankan:
 
 ### Menjalankan di Laragon
 1. Pastikan folder repo berada di root web Laragon (`C:\laragon\www\library-system`).
-2. Virtual host otomatis dapat diakses di `http://library-system.test` (pastikan Document Root mengarah ke `public/`).
+2. Aplikasi langsung muncul saat diakses via virtual host `http://library-system.test/` maupun subfolder `http://localhost/library-system/` tanpa konfigurasi document root tambahan (ditangani oleh `.htaccess` di root).
 
 ## Struktur folder
 
 ```
 library-system/
-├── public/                  # satu-satunya folder yang diakses browser
-│   ├── index.php            # front controller
-│   └── assets/{css,js}/     # style.css, app.js
+├── index.php                # front controller (pintu masuk aplikasi)
+├── router.php               # router untuk php -S bawaan CLI (blokir folder internal)
+├── .htaccess                # konfigurasi Apache (Options -Indexes & proteksi folder internal)
+├── assets/{css,js}/         # style.css, app.js
 ├── src/                     # semua kode PHP (namespace App\)
 │   ├── autoload.php         # PSR-4 autoloader
 │   ├── Contracts/           # interface (Rentable, StorageInterface)
@@ -87,8 +89,8 @@ Lama sewa 1–14 hari. Denda keterlambatan Rp 1.000 per hari.
 |---|---|---|
 | A — Backend model | OOP inti | `src/Contracts`, `src/Models`, `src/Factories` |
 | B — Backend logika | Penyimpanan & aturan bisnis | `src/Storage`, `src/Repositories`, `src/Services`, `src/Exceptions` |
-| C — Controller & routing | Alur halaman | `src/Controllers`, `src/Core`, `public/index.php` |
-| D — Front-end | Tampilan & JS | `views/`, `public/assets/` |
+| C — Controller & routing | Alur halaman | `src/Controllers`, `src/Core`, `index.php` |
+| D — Front-end | Tampilan & JS | `views/`, `assets/` |
 
 Kelompok 3 orang: gabungkan A dan B.
 
