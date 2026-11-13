@@ -1,0 +1,8 @@
+[
+    {"id":"M0001","type":"ebook","title":"Laskar Pelangi","author":"Andrea Hirata","basePrice":2000,"stock":3,"description":"Kisah sepuluh anak Belitung dan sekolah sederhana mereka.","extra":4.2},
+    {"id":"M0002","type":"ebook","title":"Pemrograman PHP Modern","author":"Tim Dosen Informatika","basePrice":3000,"stock":5,"description":"Dasar PHP 8: class, namespace, dan pola OOP.","extra":8.5},
+    {"id":"M0003","type":"ebook","title":"Dasar Basis Data","author":"R. Wijaya","basePrice":2500,"stock":2,"description":"Modelling relasional dan SQL untuk pemula.","extra":6.1},
+    {"id":"M0004","type":"comic","title":"Si Juki Anak Kampus","author":"Faza Meonk","basePrice":1500,"stock":4,"description":"Komik kocak kehidupan mahasiswa.","extra":1},
+    {"id":"M0005","type":"comic","title":"Garudayana Saga","author":"Is Yuniarto","basePrice":1800,"stock":0,"description":"Petualangan ksatria dengan latar wayang modern.","extra":2},
+    {"id":"M0006","type":"journal","title":"Jurnal Teknologi Informasi Vol. 12","author":"Redaksi JTI","basePrice":5000,"stock":3,"description":"Kumpulan artikel riset rekayasa perangkat lunak.","extra":"Penerbit UMM"}
+]
