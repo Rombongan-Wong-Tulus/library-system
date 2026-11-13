@@ -25,6 +25,9 @@ class Application
     public function __construct(string $rootPath)
     {
         $data = $rootPath . '/data';
+        if (!is_file($data . '/media.json') && is_file($data . '/media.seed.json')) {
+            copy($data . '/media.seed.json', $data . '/media.json');
+        }
         $mediaRepo = new MediaRepository(new JsonStorage($data . '/media.json'));
         $userRepo = new UserRepository(new JsonStorage($data . '/users.json'));
         $trxRepo = new TransactionRepository(new JsonStorage($data . '/transactions.json'));

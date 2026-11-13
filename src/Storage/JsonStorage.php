@@ -12,7 +12,12 @@ class JsonStorage
     {
         if (!is_file($filePath)) {
             @mkdir(dirname($filePath), 0775, true);
-            file_put_contents($filePath, '[]');
+            $seedPath = dirname($filePath) . '/' . pathinfo($filePath, PATHINFO_FILENAME) . '.seed.json';
+            if (is_file($seedPath)) {
+                copy($seedPath, $filePath);
+            } else {
+                file_put_contents($filePath, '[]');
+            }
         }
     }
 

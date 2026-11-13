@@ -2,11 +2,11 @@
 
 Dokumen terkait: [README](README.md) · [FLOW](FLOW.md) · [Pembagian tugas](PEMBAGIAN_TUGAS.md) · [Pemetaan rubrik](PEMETAAN_RUBRIK.md)
 
-Kerangka kode belum pernah dijalankan oleh pembuatnya, jadi pengujian ini adalah langkah pertama kelompok. Kerjakan berurutan; bagian 1 harus lulus sebelum yang lain.
+Pengujian dilakukan secara berurutan; bagian 1 harus lulus sebelum yang lain.
 
 ## Persiapan
 
-1. Jalankan `php -S localhost:8000 -t public` dari folder `ebook-rental`.
+1. Jalankan `php -S localhost:8000 -t public` dari root repositori (atau buka `http://library-system.test` di Laragon).
 2. Aktifkan tampilan error PHP saat uji. Tambahkan di baris awal `public/index.php` (hapus lagi sebelum dikumpulkan jika tidak diperlukan):
    ```php
    ini_set('display_errors', '1');
@@ -165,7 +165,7 @@ Token CSRF bisa berganti setelah login (sesi baru); ambil ulang dari halaman kat
 
 ## 10. Skrip tes harga
 
-Simpan sebagai `tests/PriceTest.php` di folder `ebook-rental` (sejajar dengan `src/`), lalu jalankan `php tests/PriceTest.php`.
+Simpan sebagai `tests/PriceTest.php` di root repositori (sejajar dengan `src/`), lalu jalankan `php tests/PriceTest.php`.
 
 ```php
 <?php

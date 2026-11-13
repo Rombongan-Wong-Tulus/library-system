@@ -8,7 +8,6 @@ Penyimpanan data memakai file JSON di folder `data/`.
 Syarat: PHP 8.1 atau lebih baru.
 
 ```bash
-cd ebook-rental
 php -S localhost:8000 -t public
 ```
 
@@ -18,12 +17,14 @@ Akun admin otomatis dibuat saat pertama dijalankan:
 - Email: `admin@perpus.test`
 - Password: `admin123`
 
-(Jika memakai XAMPP, taruh folder di `htdocs` lalu buka `http://localhost/ebook-rental/public/`.)
+### Menjalankan di Laragon
+1. Pastikan folder repo berada di root web Laragon (`C:\laragon\www\library-system`).
+2. Virtual host otomatis dapat diakses di `http://library-system.test` (pastikan Document Root mengarah ke `public/`).
 
 ## Struktur folder
 
 ```
-ebook-rental/
+library-system/
 ├── public/                  # satu-satunya folder yang diakses browser
 │   ├── index.php            # front controller
 │   └── assets/{css,js}/     # style.css, app.js
@@ -41,8 +42,8 @@ ebook-rental/
 │   ├── Core/                # Application (router), View, Session
 │   └── Exceptions/          # RentalException, ValidationException
 ├── views/                   # template HTML (layouts, catalog, auth, rental, admin)
-├── data/                    # media.json, users.json, transactions.json
-└── docs/
+├── data/                    # media.seed.json, media.json, users.json, transactions.json
+└── docs/                    # [Dokumentasi lengkap](docs/README.md) (FLOW, Pengujian, Rubrik, dll.)
 ```
 
 ## Pemetaan ke rubrik
