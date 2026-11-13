@@ -8,7 +8,8 @@ $currentPage = $currentPage ?? 1;
 $totalPages = $totalPages ?? 1;
 $totalItems = $totalItems ?? count($items);
 ?>
-<section class="page-head">
+<section class="hero-band">
+    <div class="hero-eyebrow">Perpustakaan Digital</div>
     <h1>Katalog</h1>
     <p>Sewa e-book, komik digital, dan jurnal untuk 1–14 hari.</p>
 </section>

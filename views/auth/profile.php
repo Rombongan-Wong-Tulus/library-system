@@ -42,9 +42,9 @@
         </table>
 
         <?php if ($profileUser->getRole()->value === 'member'): ?>
-            <div style="margin-top: 1.25rem; padding: 1rem; background: #e3f1f0; border-radius: var(--radius); border-left: 4px solid var(--teal);">
-                <h3 style="margin: 0 0 .5rem; font-size: 1.05rem;">Tingkatkan ke Premium</h3>
-                <p class="small" style="margin-bottom: .8rem;">Dapatkan diskon sewa 20% untuk semua transaksi dan pinjam hingga 5 buku sekaligus.</p>
+            <div class="upgrade-card">
+                <h3>Tingkatkan ke Premium</h3>
+                <p class="small">Dapatkan diskon sewa 20% untuk semua transaksi dan pinjam hingga 5 buku sekaligus.</p>
                 <form method="post" action="index.php?r=upgrade-plan" data-confirm="Yakin ingin meningkatkan paket akun kamu ke Premium?">
                     <?= $this->csrf() ?>
                     <button class="btn btn-small" type="submit">Upgrade ke Premium Sekarang</button>
