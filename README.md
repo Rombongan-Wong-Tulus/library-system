@@ -30,20 +30,23 @@ library-system/
 │   └── assets/{css,js}/     # style.css, app.js
 ├── src/                     # semua kode PHP (namespace App\)
 │   ├── autoload.php         # PSR-4 autoloader
-│   ├── Contracts/Rentable.php          # interface
+│   ├── Contracts/           # interface (Rentable, StorageInterface)
+│   ├── Enums/               # MediaType, Role (backed enum PHP 8.1)
+│   ├── Traits/              # Timestampable (createdAt, updatedAt)
 │   ├── Models/              # Media (abstract) -> Ebook, Comic, Journal
 │   │                        # User (abstract) -> Member -> PremiumMember, Admin
-│   │                        # Transaction
+│   │                        # Transaction (readonly id, userId, mediaId)
 │   ├── Factories/           # MediaFactory, UserFactory
-│   ├── Storage/JsonStorage.php         # baca/tulis JSON
-│   ├── Repositories/        # Media/User/Transaction repository
+│   ├── Storage/             # JsonStorage (implements StorageInterface, atomik+flock)
+│   ├── Repositories/        # BaseRepository -> Media/User/Transaction repository
 │   ├── Services/            # AuthService, RentalService (aturan bisnis)
 │   ├── Controllers/         # BaseController + Catalog/Auth/Rental/Admin
 │   ├── Core/                # Application (router), View, Session
 │   └── Exceptions/          # RentalException, ValidationException
 ├── views/                   # template HTML (layouts, catalog, auth, rental, admin)
-├── data/                    # media.seed.json, media.json, users.json, transactions.json
-└── docs/                    # [Dokumentasi lengkap](docs/README.md) (FLOW, Pengujian, Rubrik, dll.)
+├── data/                    # media.seed.json; media/users/transactions.json (.gitignored)
+├── tests/                   # PriceTest.php (tes otomatis harga, enum, trait, denda)
+└── docs/                    # [Dokumentasi lengkap](docs/README.md)
 ```
 
 ## Pemetaan ke rubrik
@@ -51,14 +54,16 @@ library-system/
 | Rubrik | Di mana |
 |---|---|
 | Class & Object | semua folder `src/` |
-| Encapsulation | properti `protected/private` + getter (`Media`, `User`, `Transaction`) |
-| Inheritance | `Media` → `Ebook/Comic/Journal`; `User` → `Member` → `PremiumMember`; `User` → `Admin` |
+| Encapsulation | properti `protected/private/readonly` + getter (`Media`, `User`, `Transaction`) |
+| Inheritance | `Media` → `Ebook/Comic/Journal`; `User` → `Member` → `PremiumMember`; `User` → `Admin`; `BaseRepository` → 3 repo |
 | Polymorphism | `getRentalPrice()` (harga beda per tipe), `getMaxLoans()` & `getDiscount()` (beda per role) |
-| Interface / abstract | `Rentable`, `Media`, `User` |
+| Interface / abstract | `Rentable`, `StorageInterface`, `Media`, `User`, `BaseRepository` |
+| Enum | `MediaType` (ebook/comic/journal), `Role` (admin/member/premium) — backed string enum PHP 8.1 |
+| Trait | `Timestampable` (createdAt/updatedAt) di `Media`, `User`, `Transaction` |
 | Namespace | `App\...` sesuai struktur folder (PSR-4) |
-| Form validasi | `views/auth/*`, `views/admin/index.php` + `public/assets/js/app.js` (klien) + `AuthService` (server) |
-| Semantik & responsif | `header/nav/main/footer`, `article`, `table` dengan `scope`, CSS grid + media query |
-| Interaktivitas JS | cari/filter katalog, dialog sewa dengan estimasi harga, konfirmasi aksi, menu mobile |
+| Form validasi | `views/auth/*`, `views/admin/*` + `app.js` (klien) + `AuthService`/`AdminController` (server) |
+| Semantik & responsif | `header/nav/main/footer`, `article`, `table` dengan `scope`, CSS grid + 3 breakpoint (mobile/tablet/desktop), dark mode |
+| Interaktivitas JS | cari/filter/sort katalog, dialog sewa fetch+fallback, toast, password strength, konfirmasi aksi |
 
 ## Aturan bisnis
 
