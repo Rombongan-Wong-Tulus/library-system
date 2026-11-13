@@ -3,33 +3,41 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use App\Contracts\StorageInterface;
 use App\Factories\UserFactory;
 use App\Models\User;
-use App\Storage\JsonStorage;
 
-class UserRepository
+/**
+ * @extends BaseRepository<User>
+ */
+class UserRepository extends BaseRepository
 {
-    public function __construct(private JsonStorage $storage)
+    public function __construct(StorageInterface $storage)
     {
+        parent::__construct($storage);
+    }
+
+    protected function mapToEntity(array $row): User
+    {
+        return UserFactory::fromArray($row);
+    }
+
+    protected function getIdPrefix(): string
+    {
+        return 'U';
     }
 
     /** @return User[] */
     public function all(): array
     {
-        return array_map(
-            static fn(array $row): User => UserFactory::fromArray($row),
-            $this->storage->read()
-        );
+        /** @var User[] */
+        return parent::all();
     }
 
     public function find(string $id): ?User
     {
-        foreach ($this->all() as $user) {
-            if ($user->getId() === $id) {
-                return $user;
-            }
-        }
-        return null;
+        $item = parent::find($id);
+        return $item instanceof User ? $item : null;
     }
 
     public function findByEmail(string $email): ?User
@@ -40,27 +48,5 @@ class UserRepository
             }
         }
         return null;
-    }
-
-    public function save(User $user): void
-    {
-        $rows = $this->storage->read();
-        $found = false;
-        foreach ($rows as $i => $row) {
-            if ($row['id'] === $user->getId()) {
-                $rows[$i] = $user->toArray();
-                $found = true;
-                break;
-            }
-        }
-        if (!$found) {
-            $rows[] = $user->toArray();
-        }
-        $this->storage->write($rows);
-    }
-
-    public function nextId(): string
-    {
-        return 'U' . strtoupper(bin2hex(random_bytes(3)));
     }
 }

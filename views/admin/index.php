@@ -9,9 +9,9 @@
         <label class="field">
             <span>Jenis</span>
             <select name="type" id="admin-type">
-                <option value="ebook">E-book</option>
-                <option value="comic">Komik</option>
-                <option value="journal">Jurnal</option>
+                <?php foreach (\App\Enums\MediaType::cases() as $type): ?>
+                    <option value="<?= $this->e($type->value) ?>"><?= $this->e($type->label()) ?></option>
+                <?php endforeach; ?>
             </select>
         </label>
         <label class="field">
@@ -57,7 +57,7 @@
             <?php foreach ($items as $m): ?>
                 <tr>
                     <th scope="row"><?= $this->e($m->getTitle()) ?></th>
-                    <td><?= $this->e($m->getType()) ?></td>
+                    <td><?= $this->e($m->getType()->label()) ?></td>
                     <td><?= $this->rupiah($m->getBasePrice()) ?></td>
                     <td><?= $m->getStock() ?></td>
                     <td>

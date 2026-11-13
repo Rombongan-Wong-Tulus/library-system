@@ -3,22 +3,26 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Traits\Timestampable;
 use DateTimeImmutable;
 
 class Transaction
 {
+    use Timestampable;
+
     public const LATE_FEE_PER_DAY = 1000.0;
 
     public function __construct(
-        private string $id,
-        private string $userId,
-        private string $mediaId,
-        private string $rentedAt,
-        private string $dueAt,
-        private float $totalPrice,
+        private readonly string $id,
+        private readonly string $userId,
+        private readonly string $mediaId,
+        private readonly string $rentedAt,
+        private readonly string $dueAt,
+        private readonly float $totalPrice,
         private ?string $returnedAt = null,
         private float $lateFee = 0.0
     ) {
+        $this->initTimestamps($this->rentedAt, $this->returnedAt ?? $this->rentedAt);
     }
 
     public function getId(): string { return $this->id; }
@@ -50,9 +54,10 @@ class Transaction
             $lateDays = (int) ceil(($now->getTimestamp() - $due->getTimestamp()) / 86400);
             $this->lateFee = $lateDays * self::LATE_FEE_PER_DAY;
         }
+        $this->touch();
     }
 
-    /** @return array<string,mixed> */
+    /** @return array<string, mixed> */
     public function toArray(): array
     {
         return [
@@ -64,15 +69,23 @@ class Transaction
             'totalPrice' => $this->totalPrice,
             'returnedAt' => $this->returnedAt,
             'lateFee' => $this->lateFee,
-        ];
+        ] + $this->timestampArray();
     }
 
-    /** @param array<string,mixed> $d */
+    /** @param array<string, mixed> $d */
     public static function fromArray(array $d): self
     {
-        return new self(
-            $d['id'], $d['userId'], $d['mediaId'], $d['rentedAt'], $d['dueAt'],
-            (float) $d['totalPrice'], $d['returnedAt'] ?? null, (float) ($d['lateFee'] ?? 0)
+        $trx = new self(
+            (string) $d['id'],
+            (string) $d['userId'],
+            (string) $d['mediaId'],
+            (string) $d['rentedAt'],
+            (string) $d['dueAt'],
+            (float) $d['totalPrice'],
+            isset($d['returnedAt']) ? (string) $d['returnedAt'] : null,
+            (float) ($d['lateFee'] ?? 0)
         );
+        $trx->initTimestamps($d['createdAt'] ?? null, $d['updatedAt'] ?? null);
+        return $trx;
     }
 }

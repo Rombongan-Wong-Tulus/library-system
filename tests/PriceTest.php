@@ -68,9 +68,11 @@ if (enum_exists('App\\Enums\\Role')) {
 
 // 5. Tes Trait Timestampable (bila sudah diimplementasikan)
 if (trait_exists('App\\Traits\\Timestampable')) {
-    $traits = class_uses($ebook);
-    check('Ebook uses Timestampable', isset($traits['App\\Traits\\Timestampable']), true);
+    $mediaTraits = class_uses(\App\Models\Media::class);
+    check('Media uses Timestampable', isset($mediaTraits['App\\Traits\\Timestampable']), true);
     check('Ebook has getCreatedAt', method_exists($ebook, 'getCreatedAt'), true);
+    check('Media __toString()', (string) $ebook !== '', true);
+    check('User __toString()', (string) $member !== '', true);
 }
 
 echo $fail === 0 ? "\nSemua tes lulus.\n" : "\n$fail tes gagal.\n";

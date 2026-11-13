@@ -1,10 +1,4 @@
 <?php
-$typeLabel = ['ebook' => 'E-book', 'comic' => 'Komik', 'journal' => 'Jurnal'];
-$rentHint = [
-    'ebook' => 'Harga per hari',
-    'comic' => 'Per hari, diskon 15% mulai 7 hari',
-    'journal' => 'Tarif flat berapa pun lama sewa',
-];
 $canRent = $user !== null && !$user->isAdmin();
 ?>
 <section class="page-head">
@@ -21,9 +15,9 @@ $canRent = $user !== null && !$user->isAdmin();
         <span>Jenis</span>
         <select id="filter-type">
             <option value="">Semua</option>
-            <option value="ebook">E-book</option>
-            <option value="comic">Komik</option>
-            <option value="journal">Jurnal</option>
+            <?php foreach (\App\Enums\MediaType::cases() as $type): ?>
+                <option value="<?= $this->e($type->value) ?>"><?= $this->e($type->label()) ?></option>
+            <?php endforeach; ?>
         </select>
     </label>
     <label class="check">
@@ -35,16 +29,16 @@ $canRent = $user !== null && !$user->isAdmin();
 
 <section class="grid" id="catalog" aria-label="Daftar media">
     <?php foreach ($items as $m): ?>
-        <article class="card type-<?= $this->e($m->getType()) ?>"
+        <article class="card type-<?= $this->e($m->getType()->value) ?>"
                  data-title="<?= $this->e(mb_strtolower($m->getTitle() . ' ' . $m->getAuthor())) ?>"
-                 data-type="<?= $this->e($m->getType()) ?>"
+                 data-type="<?= $this->e($m->getType()->value) ?>"
                  data-available="<?= $m->isAvailable() ? '1' : '0' ?>">
-            <p class="tag"><?= $this->e($typeLabel[$m->getType()] ?? $m->getType()) ?> · <?= $this->e($m->getExtraInfo()) ?></p>
+            <p class="tag"><?= $this->e($m->getType()->label()) ?> · <?= $this->e($m->getExtraInfo()) ?></p>
             <h2><?= $this->e($m->getTitle()) ?></h2>
             <p class="author"><?= $this->e($m->getAuthor()) ?></p>
             <p class="desc"><?= $this->e($m->getDescription()) ?></p>
             <p class="price"><?= $this->rupiah($m->getBasePrice()) ?></p>
-            <p class="muted small"><?= $this->e($rentHint[$m->getType()] ?? '') ?></p>
+            <p class="muted small"><?= $this->e($m->getType()->rentHint()) ?></p>
             <p class="stock <?= $m->isAvailable() ? '' : 'out' ?>">
                 <?= $m->isAvailable() ? 'Stok: ' . $m->getStock() : 'Stok habis' ?>
             </p>
@@ -52,8 +46,11 @@ $canRent = $user !== null && !$user->isAdmin();
                 <button type="button" class="btn js-rent"
                         data-id="<?= $this->e($m->getId()) ?>"
                         data-title="<?= $this->e($m->getTitle()) ?>"
-                        data-type="<?= $this->e($m->getType()) ?>"
-                        data-price="<?= $this->e($m->getBasePrice()) ?>">Sewa</button>
+                        data-type="<?= $this->e($m->getType()->value) ?>"
+                        data-price="<?= $this->e($m->getBasePrice()) ?>"
+                        data-scheme="<?= $this->e($m->getPricingScheme()) ?>"
+                        data-threshold="<?= $this->e($m->getPricingThreshold()) ?>"
+                        data-discount="<?= $this->e($m->getPricingDiscount()) ?>">Sewa</button>
             <?php elseif ($user === null && $m->isAvailable()): ?>
                 <a class="btn btn-ghost" href="index.php?r=login">Masuk untuk menyewa</a>
             <?php endif; ?>

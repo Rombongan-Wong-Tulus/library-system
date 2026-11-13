@@ -50,15 +50,18 @@ function initCatalogFilter() {
     apply();
 }
 
-/* ---------- Dialog sewa + estimasi harga (cermin logika PHP) ---------- */
+/* ---------- Dialog sewa + estimasi harga (menggunakan aturan data-* dari server) ---------- */
 const rupiah = n => 'Rp ' + Math.round(n).toLocaleString('id-ID');
 
-// Polymorphism versi JS: tiap tipe media punya rumus sendiri,
-// harus sama dengan getRentalPrice() di src/Models/*.php
-const priceRules = {
-    ebook: (price, days) => price * days,
-    comic: (price, days) => (days >= 7 ? price * days * 0.85 : price * days),
-    journal: price => price,
+const calculateRentalPrice = (scheme, price, days, threshold, discount) => {
+    if (scheme === 'flat') {
+        return price;
+    }
+    let total = price * days;
+    if (scheme === 'daily_discount' && days >= threshold) {
+        total *= (1 - discount);
+    }
+    return total;
 };
 
 function initRentDialog() {
@@ -78,7 +81,7 @@ function initRentDialog() {
         error.hidden = valid;
         days.classList.toggle('invalid', !valid);
         if (valid && current) {
-            const base = priceRules[current.type](current.price, d);
+            const base = calculateRentalPrice(current.scheme, current.price, d, current.threshold, current.discount);
             total.textContent = rupiah(base * (1 - discount));
         } else {
             total.textContent = '-';
@@ -88,7 +91,12 @@ function initRentDialog() {
 
     document.querySelectorAll('.js-rent').forEach(btn => {
         btn.addEventListener('click', () => {
-            current = { type: btn.dataset.type, price: parseFloat(btn.dataset.price) };
+            current = {
+                price: parseFloat(btn.dataset.price || '0'),
+                scheme: btn.dataset.scheme || 'daily',
+                threshold: parseInt(btn.dataset.threshold || '0', 10),
+                discount: parseFloat(btn.dataset.discount || '0'),
+            };
             document.getElementById('rent-media-id').value = btn.dataset.id;
             document.getElementById('rent-title').textContent = btn.dataset.title;
             days.value = 3;
