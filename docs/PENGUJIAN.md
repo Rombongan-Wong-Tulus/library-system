@@ -6,8 +6,8 @@ Pengujian dilakukan secara berurutan; bagian 1 harus lulus sebelum yang lain.
 
 ## Persiapan
 
-1. Jalankan `php -S localhost:8000 -t public` dari root repositori (atau buka `http://library-system.test` di Laragon).
-2. Aktifkan tampilan error PHP saat uji. Tambahkan di baris awal `public/index.php` (hapus lagi sebelum dikumpulkan jika tidak diperlukan):
+1. Jalankan `php -S localhost:8000 router.php` dari root repositori (atau buka `http://library-system.test` / `http://localhost/library-system/` di Laragon).
+2. Aktifkan tampilan error PHP saat uji. Tambahkan di baris awal `index.php` (hapus lagi sebelum dikumpulkan jika tidak diperlukan):
    ```php
    ini_set('display_errors', '1');
    error_reporting(E_ALL);
@@ -112,7 +112,7 @@ Estimasi di dialog (JS) dan total dari server harus **sama** untuk semua baris d
 | 6.4 | Member mengirim `POST admin-add` / `admin-delete` | Ditolak (diarahkan ke katalog), data tidak berubah | [ ] |
 | 6.5 | Kirim POST tanpa token CSRF | Pesan "Token CSRF tidak valid..." (kode 419) | [ ] |
 | 6.6 | Admin menambah media berjudul `<script>alert(1)</script>` | Tampil sebagai teks biasa di katalog, tidak ada popup | [ ] |
-| 6.7 | Buka `http://localhost:8000/../data/users.json` atau langsung ke `data/` | Tidak bisa diakses lewat web (karena hanya `public/` yang menjadi root) | [ ] |
+| 6.7 | Buka `http://localhost:8000/data/users.json` atau `/src/Models/Media.php` | Menghasilkan status 403 Forbidden (diblokir via `router.php` dan `.htaccess`) | [ ] |
 | 6.8 | Login berhasil lalu cek cookie sesi | ID sesi berganti setelah login | [ ] |
 
 ## 7. Admin

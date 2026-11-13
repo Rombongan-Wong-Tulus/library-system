@@ -18,7 +18,7 @@ Kelompok 3 orang: gabungkan A dan B.
 | | A: Model OOP | B: Logika & data | C: Controller & routing | D: Front-end |
 |---|---|---|---|---|
 | Rubrik utama | PHP OOP (40) | PHP OOP (40) + eksekusi (30) | eksekusi & struktur (30) | Front-end (30) |
-| Folder | `src/Contracts`, `src/Models`, `src/Factories` | `src/Storage`, `src/Repositories`, `src/Services`, `src/Exceptions` | `src/Controllers`, `src/Core`, `public/index.php` | `views/`, `public/assets/` |
+| Folder | `src/Contracts`, `src/Models`, `src/Factories` | `src/Storage`, `src/Repositories`, `src/Services`, `src/Exceptions` | `src/Controllers`, `src/Core`, `index.php` | `views/`, `assets/` |
 | Ketergantungan | tidak bergantung siapa pun | memakai Model dari A | memakai Service dari B, View dari D | memakai data dari Controller C |
 
 Urutan yang aman: **A dan B mulai lebih dulu**, lalu C dan D menyusul. Selama A dan B belum selesai, C dan D bisa memakai kode yang sudah ada.
@@ -65,7 +65,7 @@ Selesai jika:
 
 ### C — Controller & routing
 
-Berkas: `src/Controllers/*`, `src/Core/*`, `public/index.php`
+Berkas: `src/Controllers/*`, `src/Core/*`, `index.php`
 
 Sudah ada: `Application` (router + CSRF), `Session`, `View`, `BaseController`, `CatalogController`, `AuthController`, `RentalController`, `AdminController`.
 
@@ -84,7 +84,7 @@ Selesai jika:
 
 ### D — Front-end
 
-Berkas: `views/*`, `public/assets/css/style.css`, `public/assets/js/app.js`
+Berkas: `views/*`, `assets/css/style.css`, `assets/js/app.js`
 
 Sudah ada: layout utama, 7 halaman, CSS responsif, JS (filter katalog, dialog sewa, validasi form, konfirmasi).
 

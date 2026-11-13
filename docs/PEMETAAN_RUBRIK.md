@@ -46,7 +46,7 @@ Catatan soal: penyimpanan e-book boleh XML/JSON atau Object Class PHP. Proyek in
 | Kenapa Repository dan Service dipisah? | Repository hanya baca/tulis data; Service berisi aturan bisnis. Mengganti JSON ke database cukup mengubah Repository. |
 | Apa fungsi namespace? | Mencegah bentrok nama kelas dan membuat autoload otomatis dari struktur folder. |
 | Kenapa `declare(strict_types=1)`? | Memaksa tipe argumen sesuai deklarasi sehingga bug tipe cepat ketahuan. |
-| Kenapa `public/index.php` bukan HTML? | Itu front controller: titik masuk tunggal yang menjalankan router. HTML ada di `views/`. |
+| Kenapa `index.php` bukan HTML? | Itu front controller: titik masuk tunggal yang menjalankan router. HTML ada di `views/`. |
 | Kenapa StorageInterface? | Agar repository tidak terikat pada implementasi penyimpanan tertentu (saat ini JSON); mudah diganti ke database cukup dengan implementasi baru. |
 
 ## 2. Front-end (30 poin)
@@ -55,8 +55,8 @@ Catatan soal: penyimpanan e-book boleh XML/JSON atau Object Class PHP. Proyek in
 |---|---|---|
 | Form validasi | `views/auth/*`, `views/admin/index.php`, `app.js` (`initFormValidation`) | pesan error per kolom di bawah input; cek wajib isi, email, panjang minimum, konfirmasi password. Validasi ulang di server (`AuthService`, `AdminController`). Validasi `extra` per jenis media di server. |
 | Elemen semantik | `views/layouts/main.php`, semua view | `header`, `nav`, `main`, `footer`, `article`, `section`, `fieldset/legend`, `label`, `table` dengan `caption` dan `scope`, `dialog` |
-| Layout responsif | `public/assets/css/style.css` | 3 breakpoint: mobile (<640px), tablet (640-1024px), desktop (>1024px). CSS grid `auto-fill`, `meta viewport`, menu hamburger. Dark mode via `prefers-color-scheme`. |
-| Interaktivitas JS | `public/assets/js/app.js` | filter & sort katalog JS, sewa via `fetch` + fallback form, toast notification, indikator kekuatan password, dialog baca cuplikan, konfirmasi aksi, label form admin berubah per jenis |
+| Layout responsif | `assets/css/style.css` | 3 breakpoint: mobile (<640px), tablet (640-1024px), desktop (>1024px). CSS grid `auto-fill`, `meta viewport`, menu hamburger. Dark mode via `prefers-color-scheme`. |
+| Interaktivitas JS | `assets/js/app.js` | filter & sort katalog JS, sewa via `fetch` + fallback form, toast notification, indikator kekuatan password, dialog baca cuplikan, konfirmasi aksi, label form admin berubah per jenis |
 | Aksesibilitas | CSS dan view | link "Lewati ke konten", fokus keyboard terlihat, `aria-live` untuk jumlah hasil, `prefers-reduced-motion`, `aria-label` pada navigasi dan bagian |
 
 ## 3. Kerapian & struktur (30 poin)
@@ -65,7 +65,7 @@ Catatan soal: penyimpanan e-book boleh XML/JSON atau Object Class PHP. Proyek in
 |---|---|
 | Folder `src/` | semua kode PHP ada di `src/`, dipisah per lapisan |
 | Modularitas | satu kelas satu berkas; controller, service, repository, model terpisah |
-| Hanya `public/` yang diakses web | `src/`, `views/`, `data/` di luar `public/`; `data/.htaccess` menolak akses langsung |
+| Proteksi direktori internal | Hanya `index.php` dan `assets/` yang diakses web; folder `src/`, `views/`, `data/`, `tests/`, `docs/`, `.git/` serta berkas `*.md`, `*.json`, `*.lock` diblokir oleh `.htaccess` (Apache/Laragon) dan `router.php` (PHP CLI) |
 | Eksekusi tanpa error | lihat [PENGUJIAN.md](PENGUJIAN.md); pastikan tidak ada warning/notice di semua halaman |
 | Dokumentasi | folder `docs/` ini |
 | Keamanan | Cookie sesi `httponly` + `SameSite=Lax`, CSRF token, XSS escape, file JSON ditulis atomik (`rename`) dengan `flock` |

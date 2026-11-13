@@ -10,7 +10,7 @@ Dokumen terkait: [README](README.md) · [Pembagian tugas](PEMBAGIAN_TUGAS.md) ·
 Browser
    │  index.php?r=<route>
    ▼
-public/index.php            ← pintu masuk (front controller)
+index.php                   ← pintu masuk (front controller)
    │
    ▼
 Core\Application            ← cocokkan "METHOD route", cek CSRF, panggil controller
@@ -48,7 +48,7 @@ Prinsip pemisahan:
 ```mermaid
 sequenceDiagram
     participant B as Browser
-    participant I as public/index.php
+    participant I as index.php
     participant A as Core\Application
     participant C as Controller
     participant S as Service / Repository
@@ -69,7 +69,7 @@ sequenceDiagram
 Langkah rinci:
 
 1. Browser meminta `index.php?r=<nama-route>`. Tanpa `r`, default-nya `catalog`.
-2. `public/index.php` memuat autoloader dan menjalankan `Application`.
+2. `index.php` memuat autoloader dan menjalankan `Application`.
 3. `Application` (saat dibuat) merakit semua dependency: storage → repository → service → controller.
 4. `run()` menyalakan session, membentuk kunci `"METHOD route"` (contoh `POST rent`), lalu mencarinya di tabel route.
 5. Route tidak ada → halaman 404. Request POST tanpa token CSRF valid → ditolak (419).
@@ -223,4 +223,4 @@ Validasi di browser hanya untuk kenyamanan. Pemeriksaan yang menentukan tetap di
 | Password bocor | `password_hash` / `password_verify` |
 | Session fixation | `session_regenerate_id(true)` setelah login |
 | Akses tanpa izin | `requireLogin()` dan `requireAdmin()` di controller |
-| Data dibaca langsung | hanya `public/` yang diakses web; `data/` dilindungi `.htaccess` |
+| Data dibaca langsung | akses web langsung hanya ke `index.php` dan `assets/`; folder `data/` dan lainnya diblokir `.htaccess` dan `router.php` |

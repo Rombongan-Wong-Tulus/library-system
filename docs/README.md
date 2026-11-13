@@ -23,13 +23,13 @@ Syarat: PHP 8.1 atau lebih baru.
 
 ### Menggunakan Laragon (Windows)
 1. Direktori repositori: `C:\laragon\www\library-system`.
-2. Buka `http://library-system.test` (pastikan Document Root mengarah ke `public/`).
+2. Buka `http://library-system.test` atau `http://localhost/library-system/`.
 
 ### Menggunakan Built-in PHP Server (CLI)
 Jalankan dari root repositori:
 
 ```bash
-php -S localhost:8000 -t public
+php -S localhost:8000 router.php
 ```
 
 Buka http://localhost:8000
@@ -43,9 +43,10 @@ Akun admin otomatis dibuat saat pertama dijalankan:
 
 ```
 library-system/
-├── public/                  # satu-satunya folder yang diakses browser
-│   ├── index.php            # front controller (pintu masuk, bukan HTML)
-│   └── assets/{css,js}/     # style.css, app.js
+├── index.php                # front controller (pintu masuk, bukan HTML)
+├── router.php               # router dev server php -S
+├── .htaccess                # proteksi Apache/Laragon
+├── assets/{css,js}/         # style.css, app.js
 ├── src/                     # semua kode PHP (namespace App\)
 │   ├── autoload.php         # PSR-4 autoloader
 │   ├── Contracts/           # interface Rentable
@@ -66,7 +67,7 @@ library-system/
 └── docs/                    # dokumentasi ini
 ```
 
-Catatan: HTML ada di `views/` (berekstensi `.php` karena menyisipkan data dari PHP). `public/index.php` hanya 7 baris PHP yang menjalankan `Application`; tidak ada HTML di dalamnya.
+Catatan: HTML ada di `views/` (berekstensi `.php` karena menyisipkan data dari PHP). `index.php` hanya beberapa baris PHP yang menjalankan `Application`; tidak ada HTML di dalamnya.
 
 ## Aturan bisnis
 
@@ -86,7 +87,7 @@ Catatan: HTML ada di `views/` (berekstensi `.php` karena menyisipkan data dari P
 - Denda keterlambatan Rp 1.000 per hari (dibulatkan ke atas).
 - Satu pengguna tidak bisa menyewa media yang sama dua kali selagi masih aktif.
 
-Rumus harga di `public/assets/js/app.js` (estimasi di dialog) harus sama dengan `getRentalPrice()` di `src/Models/*.php`. Jika aturan harga diubah, ubah di kedua tempat.
+Rumus harga di `assets/js/app.js` (estimasi di dialog) harus sama dengan `getRentalPrice()` di `src/Models/*.php`. Jika aturan harga diubah, ubah di kedua tempat.
 
 ## Pengujian
 
