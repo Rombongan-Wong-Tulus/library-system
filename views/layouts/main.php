@@ -9,6 +9,7 @@
 </head>
 <body>
 <a class="skip" href="#konten">Lewati ke konten</a>
+<div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
 <header class="site-header">
     <a class="brand" href="index.php?r=catalog">Lembar</a>

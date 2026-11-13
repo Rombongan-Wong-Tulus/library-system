@@ -14,8 +14,12 @@
         </label>
         <label class="field">
             <span>Password (min. 6 karakter)</span>
-            <input type="password" name="password" required minlength="6" autocomplete="new-password">
+            <input type="password" name="password" id="register-password" required minlength="6" autocomplete="new-password">
             <small class="error" hidden></small>
+            <div id="password-strength" class="password-meter" aria-live="polite">
+                <div class="meter-bar"><div class="meter-fill" id="meter-fill"></div></div>
+                <span class="meter-text small muted" id="meter-text">Kekuatan password</span>
+            </div>
         </label>
         <label class="field">
             <span>Ulangi password</span>
