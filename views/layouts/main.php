@@ -9,6 +9,7 @@
 </head>
 <body>
 <a class="skip" href="#konten">Lewati ke konten</a>
+<div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
 <header class="site-header">
     <a class="brand" href="index.php?r=catalog">Lembar</a>
@@ -20,9 +21,11 @@
             <a class="btn btn-small" href="index.php?r=register">Daftar</a>
         <?php else: ?>
             <?php if ($user->isAdmin()): ?>
-                <a href="index.php?r=admin">Kelola</a>
+                <a href="index.php?r=admin">Katalog</a>
+                <a href="index.php?r=admin-members">Member</a>
             <?php else: ?>
                 <a href="index.php?r=rentals">Sewaan saya</a>
+                <a href="index.php?r=profile">Profil</a>
             <?php endif; ?>
             <form method="post" action="index.php?r=logout" class="inline-form">
                 <?= $this->csrf() ?>

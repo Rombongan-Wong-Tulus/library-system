@@ -3,32 +3,45 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use App\Contracts\StorageInterface;
 use App\Models\Transaction;
-use App\Storage\JsonStorage;
 
-class TransactionRepository
+/**
+ * @extends BaseRepository<Transaction>
+ */
+class TransactionRepository extends BaseRepository
 {
-    public function __construct(private JsonStorage $storage)
+    public function __construct(StorageInterface $storage)
     {
+        parent::__construct($storage);
+    }
+
+    protected function mapToEntity(array $row): Transaction
+    {
+        return Transaction::fromArray($row);
+    }
+
+    protected function getIdPrefix(): string
+    {
+        return 'T';
+    }
+
+    public function nextId(): string
+    {
+        return 'T' . date('ymd') . strtoupper(bin2hex(random_bytes(2)));
     }
 
     /** @return Transaction[] */
     public function all(): array
     {
-        return array_map(
-            static fn(array $row): Transaction => Transaction::fromArray($row),
-            $this->storage->read()
-        );
+        /** @var Transaction[] */
+        return parent::all();
     }
 
     public function find(string $id): ?Transaction
     {
-        foreach ($this->all() as $trx) {
-            if ($trx->getId() === $id) {
-                return $trx;
-            }
-        }
-        return null;
+        $item = parent::find($id);
+        return $item instanceof Transaction ? $item : null;
     }
 
     /** @return Transaction[] */
@@ -38,27 +51,5 @@ class TransactionRepository
             $this->all(),
             static fn(Transaction $t): bool => $t->getUserId() === $userId
         ));
-    }
-
-    public function save(Transaction $trx): void
-    {
-        $rows = $this->storage->read();
-        $found = false;
-        foreach ($rows as $i => $row) {
-            if ($row['id'] === $trx->getId()) {
-                $rows[$i] = $trx->toArray();
-                $found = true;
-                break;
-            }
-        }
-        if (!$found) {
-            $rows[] = $trx->toArray();
-        }
-        $this->storage->write($rows);
-    }
-
-    public function nextId(): string
-    {
-        return 'T' . date('ymd') . strtoupper(bin2hex(random_bytes(2)));
     }
 }

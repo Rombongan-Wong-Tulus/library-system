@@ -21,8 +21,14 @@ Pengguna bisa melihat katalog (e-book, komik, jurnal), mendaftar, menyewa, menge
 
 Syarat: PHP 8.1 atau lebih baru.
 
+### Menggunakan Laragon (Windows)
+1. Direktori repositori: `C:\laragon\www\library-system`.
+2. Buka `http://library-system.test` (pastikan Document Root mengarah ke `public/`).
+
+### Menggunakan Built-in PHP Server (CLI)
+Jalankan dari root repositori:
+
 ```bash
-cd ebook-rental
 php -S localhost:8000 -t public
 ```
 
@@ -33,12 +39,10 @@ Akun admin otomatis dibuat saat pertama dijalankan:
 - Email: `admin@perpus.test`
 - Password: `admin123`
 
-Jika memakai XAMPP, taruh folder di `htdocs` lalu buka `http://localhost/ebook-rental/public/`.
-
 ## Struktur folder
 
 ```
-ebook-rental/
+library-system/
 ├── public/                  # satu-satunya folder yang diakses browser
 │   ├── index.php            # front controller (pintu masuk, bukan HTML)
 │   └── assets/{css,js}/     # style.css, app.js
@@ -84,6 +88,6 @@ Catatan: HTML ada di `views/` (berekstensi `.php` karena menyisipkan data dari P
 
 Rumus harga di `public/assets/js/app.js` (estimasi di dialog) harus sama dengan `getRentalPrice()` di `src/Models/*.php`. Jika aturan harga diubah, ubah di kedua tempat.
 
-## Status saat ini
+## Pengujian
 
-Kerangka kode mencakup semua poin rubrik, tetapi **belum pernah dijalankan** oleh pembuatnya. Langkah pertama kelompok adalah menjalankan dan menguji; lihat [PENGUJIAN.md](PENGUJIAN.md).
+Semua skenario pengujian dan petunjuk eksekusi dapat dilihat di [PENGUJIAN.md](PENGUJIAN.md).

@@ -7,7 +7,7 @@ Dokumen terkait: [README](README.md) · [Pembagian tugas](PEMBAGIAN_TUGAS.md) ·
 Satu orang (mis. C) menyiapkan repo:
 
 ```bash
-cd ebook-rental
+cd library-system
 git init
 git add .
 git commit -m "chore: struktur awal proyek"
@@ -20,7 +20,7 @@ Anggota lain:
 
 ```bash
 git clone <URL-repo>
-cd ebook-rental
+cd library-system
 ```
 
 Tambahkan semua anggota sebagai collaborator di pengaturan repo.

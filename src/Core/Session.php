@@ -8,7 +8,10 @@ final class Session
     public static function start(): void
     {
         if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+            session_start([
+                'cookie_httponly' => true,
+                'cookie_samesite' => 'Lax',
+            ]);
         }
     }
 

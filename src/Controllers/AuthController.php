@@ -4,10 +4,28 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Core\Session;
+use App\Core\View;
+use App\Enums\Role;
 use App\Exceptions\ValidationException;
+use App\Factories\UserFactory;
+use App\Repositories\MediaRepository;
+use App\Repositories\TransactionRepository;
+use App\Repositories\UserRepository;
+use App\Services\AuthService;
+use DateTimeImmutable;
 
 class AuthController extends BaseController
 {
+    public function __construct(
+        View $view,
+        AuthService $auth,
+        private ?UserRepository $users = null,
+        private ?TransactionRepository $transactions = null,
+        private ?MediaRepository $media = null
+    ) {
+        parent::__construct($view, $auth);
+    }
+
     public function showLogin(): void
     {
         $this->render('auth/login', ['old' => []]);
@@ -62,5 +80,51 @@ class AuthController extends BaseController
         session_start();
         Session::flash('success', 'Kamu sudah keluar.');
         $this->redirect('catalog');
+    }
+
+    /** Halaman profil pengguna (data diri, paket, riwayat singkat). */
+    public function profile(): void
+    {
+        $user = $this->requireLogin();
+        $recentTrx = [];
+        $mediaTitles = [];
+
+        if ($this->transactions !== null) {
+            $userTrx = array_reverse($this->transactions->byUser($user->getId()));
+            $recentTrx = array_slice($userTrx, 0, 5);
+            if ($this->media !== null) {
+                foreach ($recentTrx as $t) {
+                    $m = $this->media->find($t->getMediaId());
+                    $mediaTitles[$t->getId()] = $m ? $m->getTitle() : '(media dihapus)';
+                }
+            }
+        }
+
+        $this->render('auth/profile', [
+            'profileUser' => $user,
+            'recentTransactions' => $recentTrx,
+            'mediaTitles' => $mediaTitles,
+        ]);
+    }
+
+    /** Tombol upgrade ke paket Premium. */
+    public function upgradePlan(): void
+    {
+        $user = $this->requireLogin();
+        if ($user->isAdmin() || $user->getRole() === Role::PREMIUM) {
+            Session::flash('error', 'Akun kamu sudah berstatus Premium atau Admin.');
+            $this->redirect('profile');
+        }
+
+        if ($this->users !== null) {
+            $data = $user->toArray();
+            $data['role'] = Role::PREMIUM->value;
+            $data['updatedAt'] = (new DateTimeImmutable())->format('Y-m-d H:i:s');
+            $updated = UserFactory::fromArray($data);
+            $this->users->save($updated);
+        }
+
+        Session::flash('success', 'Selamat! Akun kamu berhasil di-upgrade ke paket Premium. Nikmati diskon 20% dan batas 5 pinjaman!');
+        $this->redirect('profile');
     }
 }

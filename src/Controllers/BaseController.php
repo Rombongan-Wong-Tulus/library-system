@@ -29,7 +29,8 @@ abstract class BaseController
 
     protected function redirect(string $route): never
     {
-        header('Location: index.php?r=' . urlencode($route));
+        // ponytail: perutean sederhana berbasis index.php?r=
+        header('Location: index.php?r=' . $route);
         exit;
     }
 
