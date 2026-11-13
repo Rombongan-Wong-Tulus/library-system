@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\MediaType;
+
 /** E-book: harga per hari. */
 class Ebook extends Media
 {
@@ -18,7 +20,10 @@ class Ebook extends Media
         parent::__construct($id, $title, $author, $basePrice, $stock, $description);
     }
 
-    public function getType(): string { return 'ebook'; }
+    public function getType(): MediaType
+    {
+        return MediaType::EBOOK;
+    }
 
     public function getRentalPrice(int $days): float
     {
@@ -28,6 +33,17 @@ class Ebook extends Media
     public function getExtraInfo(): string
     {
         return $this->fileSizeMb > 0 ? number_format($this->fileSizeMb, 1) . ' MB' : 'PDF/EPUB';
+    }
+
+    public function getFileSizeMb(): float
+    {
+        return $this->fileSizeMb;
+    }
+
+    public function setFileSizeMb(float $size): void
+    {
+        $this->fileSizeMb = $size;
+        $this->touch();
     }
 
     public function toArray(): array

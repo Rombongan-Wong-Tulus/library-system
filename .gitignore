@@ -1,2 +1,4 @@
+data/media.json
 data/users.json
 data/transactions.json
+data/*.lock

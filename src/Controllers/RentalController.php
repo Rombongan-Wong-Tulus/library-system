@@ -36,11 +36,39 @@ class RentalController extends BaseController
     public function rent(): void
     {
         $user = $this->requireLogin();
+        $isAjax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
         try {
-            $trx = $this->rentals->rent($user, (string) ($_POST['media_id'] ?? ''), (int) ($_POST['days'] ?? 0));
-            Session::flash('success', 'Berhasil menyewa. Total ' . $this->view->rupiah($trx->getTotalPrice()) . '.');
+            $mediaId = (string) ($_POST['media_id'] ?? '');
+            $trx = $this->rentals->rent($user, $mediaId, (int) ($_POST['days'] ?? 0));
+            $msg = 'Berhasil menyewa. Total ' . $this->view->rupiah($trx->getTotalPrice()) . '.';
+
+            if ($isAjax) {
+                header('Content-Type: application/json');
+                $media = $this->media->find($mediaId);
+                echo json_encode([
+                    'success' => true,
+                    'message' => $msg,
+                    'mediaId' => $mediaId,
+                    'remainingStock' => $media ? $media->getStock() : 0,
+                    'totalPrice' => $trx->getTotalPrice(),
+                ]);
+                exit;
+            }
+
+            Session::flash('success', $msg);
             $this->redirect('rentals');
         } catch (RentalException $e) {
+            if ($isAjax) {
+                http_response_code(400);
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ]);
+                exit;
+            }
+
             Session::flash('error', $e->getMessage());
             $this->redirect('catalog');
         }

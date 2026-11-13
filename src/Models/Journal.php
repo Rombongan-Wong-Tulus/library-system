@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\MediaType;
+
 /** Jurnal ilmiah: tarif flat berapa pun lama sewa. */
 class Journal extends Media
 {
@@ -18,7 +20,15 @@ class Journal extends Media
         parent::__construct($id, $title, $author, $basePrice, $stock, $description);
     }
 
-    public function getType(): string { return 'journal'; }
+    public function getType(): MediaType
+    {
+        return MediaType::JOURNAL;
+    }
+
+    public function getPricingScheme(): string
+    {
+        return 'flat';
+    }
 
     public function getRentalPrice(int $days): float
     {
@@ -28,6 +38,17 @@ class Journal extends Media
     public function getExtraInfo(): string
     {
         return $this->publisher;
+    }
+
+    public function getPublisher(): string
+    {
+        return $this->publisher;
+    }
+
+    public function setPublisher(string $publisher): void
+    {
+        $this->publisher = $publisher;
+        $this->touch();
     }
 
     public function toArray(): array

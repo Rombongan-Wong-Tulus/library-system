@@ -1,6 +1,6 @@
 <section class="page-head">
     <h1>Sewaan saya</h1>
-    <p>Maksimal <?= (int) $user->getMaxLoans() ?> pinjaman aktif untuk akun <?= $this->e($user->getRole()) ?>.</p>
+    <p>Maksimal <?= (int) $user->getMaxLoans() ?> pinjaman aktif untuk akun <?= $this->e($user->getRole()->label()) ?>.</p>
 </section>
 
 <?php if ($rows === []): ?>
