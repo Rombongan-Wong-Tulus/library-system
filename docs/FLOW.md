@@ -224,3 +224,14 @@ Validasi di browser hanya untuk kenyamanan. Pemeriksaan yang menentukan tetap di
 | Session fixation | `session_regenerate_id(true)` setelah login |
 | Akses tanpa izin | `requireLogin()` dan `requireAdmin()` di controller |
 | Data dibaca langsung | akses web langsung hanya ke `index.php` dan `assets/`; folder `data/` dan lainnya diblokir `.htaccess` dan `router.php` |
+
+### 4.7 Perpanjang sewa
+
+1. Di halaman `rentals`, tersedia form perpanjangan untuk transaksi aktif yang belum terlambat dan total durasi < 14 hari.
+2. `POST extend-rental` dengan `transaction_id` dan `extra_days`.
+3. `RentalService::extendRental()`:
+   - Validasi kepemilikan dan status transaksi.
+   - Hitung harga baru menggunakan `PriceCalculator` dengan basis harga awal.
+   - `Transaction::extend()` memperbarui `dueAt` dan `totalDays`.
+4. Flash sukses (plus info biaya tambahan bila ada) → redirect ke `rentals`.
+
