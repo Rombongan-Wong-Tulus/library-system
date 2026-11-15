@@ -101,6 +101,10 @@ Estimasi di dialog (JS) dan total dari server harus **sama** untuk semua baris d
 | 5.5 | Kembalikan transaksi yang sama lagi (kirim ulang form) | "Media ini sudah dikembalikan." | [ ] |
 | 5.6 | Setelah mengembalikan, sewa lagi media itu | Berhasil (tidak lagi dianggap duplikat) | [ ] |
 | 5.7 | Member A mengirim `trx_id` milik Member B (bagian 8) | "Transaksi tidak ditemukan." | [ ] |
+| 5.8 | Perpanjang transaksi aktif (mis. 3+3 hari) | Berhasil; `dueAt` bertambah; `totalPaid` bertambah | [ ] |
+| 5.9 | Perpanjang transaksi hingga > 14 hari | Ditolak; "Total durasi sewa kumulatif maksimal 14 hari." | [ ] |
+| 5.10 | Perpanjang transaksi terlambat | Ditolak; "Transaksi sudah terlambat..." | [ ] |
+| 5.11 | Perpanjang transaksi yang sudah dikembalikan | Ditolak; "Transaksi sudah dikembalikan..." | [ ] |
 
 ## 6. Hak akses dan keamanan
 
