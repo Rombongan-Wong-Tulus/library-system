@@ -42,11 +42,29 @@
                 </td>
                 <td>
                     <?php if ($t->isActive()): ?>
-                        <form method="post" action="index.php?r=return" data-confirm="Kembalikan &quot;<?= $this->e($m ? $m->getTitle() : '') ?>&quot;?">
-                            <?= $this->csrf() ?>
-                            <input type="hidden" name="trx_id" value="<?= $this->e($t->getId()) ?>">
-                            <button class="btn btn-small" type="submit">Kembalikan</button>
-                        </form>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <form method="post" action="index.php?r=return" data-confirm="Kembalikan &quot;<?= $this->e($m ? $m->getTitle() : '') ?>&quot;?">
+                                <?= $this->csrf() ?>
+                                <input type="hidden" name="trx_id" value="<?= $this->e($t->getId()) ?>">
+                                <button class="btn btn-small btn-ghost" style="width: 100%;" type="submit">Kembalikan</button>
+                            </form>
+                            
+                            <?php if ($row['maxExtendDays'] > 0): ?>
+                                <form method="post" action="index.php?r=extend-rental" style="display: flex; gap: 4px;">
+                                    <?= $this->csrf() ?>
+                                    <input type="hidden" name="transaction_id" value="<?= $this->e($t->getId()) ?>">
+                                    <label for="extra_days_<?= $this->e($t->getId()) ?>" class="sr-only">Hari tambahan</label>
+                                    <select name="extra_days" id="extra_days_<?= $this->e($t->getId()) ?>" class="input-small" style="height: 32px; padding: 0 4px; font-size: 12px; flex: 1;">
+                                        <?php for ($i = 1; $i <= $row['maxExtendDays']; $i++): ?>
+                                            <option value="<?= $i ?>"><?= $i ?> hari</option>
+                                        <?php endfor; ?>
+                                    </select>
+                                    <button class="btn btn-small btn-primary" type="submit">Perpanjang</button>
+                                </form>
+                            <?php elseif ($t->isActive() && !$t->isOverdue() && $t->getTotalDays() >= 14): ?>
+                                <span class="small" style="color: var(--color-mute);">Maks 14 hari tercapai</span>
+                            <?php endif; ?>
+                        </div>
                     <?php endif; ?>
                 </td>
             </tr>
