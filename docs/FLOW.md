@@ -233,6 +233,9 @@ Validasi di browser hanya untuk kenyamanan. Pemeriksaan yang menentukan tetap di
    - Validasi kepemilikan dan status transaksi.
    - Hitung harga baru menggunakan `PriceCalculator` dengan basis harga awal.
    - `Transaction::extend()` memperbarui `dueAt` dan `totalDays`.
-4. Flash sukses (plus info biaya tambahan bila ada) → redirect ke `rentals`.![Halaman Sewaan saya dengan tombol Perpanjang](screenshots/07-sewa-saya.png)
+4. Flash sukses (plus info biaya tambahan bila ada) → redirect ke `rentals`.
+
+![Halaman Sewaan saya dengan tombol Perpanjang](screenshots/07-sewa-saya.png)
+
 ![Pesan sukses setelah perpanjangan](screenshots/13-perpanjang-berhasil.png)
 
