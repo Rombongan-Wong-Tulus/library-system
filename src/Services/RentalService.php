@@ -17,7 +17,8 @@ class RentalService
 
     public function __construct(
         private MediaRepository $media,
-        private TransactionRepository $transactions
+        private TransactionRepository $transactions,
+        private PriceCalculator $priceCalculator
     ) {
     }
 
@@ -51,8 +52,14 @@ class RentalService
             }
         }
 
-        // Polymorphism: harga dihitung oleh subclass Media, diskon oleh subclass User.
-        $price = $media->getRentalPrice($days) * (1 - $user->getDiscount());
+        // Gunakan PriceCalculator terpusat
+        $basePriceAtRental = (int) $media->getBasePrice();
+        $totalPrice = $this->priceCalculator->calculateTotal(
+            $media->getType()->value,
+            $basePriceAtRental,
+            $days,
+            $user->getRole()->value
+        );
 
         $now = new DateTimeImmutable();
         $trx = new Transaction(
@@ -61,7 +68,13 @@ class RentalService
             $media->getId(),
             $now->format('Y-m-d H:i:s'),
             $now->modify("+{$days} days")->format('Y-m-d H:i:s'),
-            round($price, 2)
+            $totalPrice,
+            null, // returnedAt
+            0,    // lateFee
+            $days,
+            $totalPrice, // totalPaid awal sama dengan totalPrice
+            0,    // extensionCount
+            $basePriceAtRental
         );
 
         $media->decreaseStock();
@@ -69,6 +82,57 @@ class RentalService
         $this->transactions->save($trx);
 
         return $trx;
+    }
+
+    /**
+     * Perpanjang masa sewa media.
+     *
+     * @param User $user Pengguna yang melakukan perpanjangan.
+     * @param string $transactionId ID transaksi yang akan diperpanjang.
+     * @param int $extraDays Jumlah hari tambahan (1-14).
+     * @param DateTimeImmutable $now Waktu saat ini.
+     * @return array{trx: Transaction, additionalFee: int} Objek transaksi yang telah diperbarui dan biaya tambahan.
+     * @throws RentalException Jika validasi gagal.
+     */
+    public function extendRental(User $user, string $transactionId, int $extraDays, DateTimeImmutable $now): array
+    {
+        $trx = $this->transactions->find($transactionId);
+        if ($trx === null || $trx->getUserId() !== $user->getId()) {
+            throw new RentalException('Transaksi tidak ditemukan.');
+        }
+
+        // Validasi status transaksi & durasi perpanjangan dasar
+        $trx->assertExtendable($extraDays, $now);
+
+        // Ambil media untuk mendapatkan tipenya
+        $media = $this->media->find($trx->getMediaId());
+        if ($media === null) {
+            throw new RentalException('Data media tidak ditemukan.');
+        }
+
+        // Hitung harga total baru
+        $newTotalDays = $trx->getTotalDays() + $extraDays;
+
+        // snapshot harga dasar saat transaksi dibuat
+        $basePrice = $trx->getBasePriceAtRental();
+        if ($basePrice === null) {
+            throw new RentalException('Data harga transaksi ini tidak lengkap sehingga tidak bisa diperpanjang. Hubungi admin.');
+        }
+
+        $newPrice = $this->priceCalculator->calculateTotal(
+            $media->getType()->value,
+            $basePrice,
+            $newTotalDays,
+            $user->getRole()->value
+        );
+
+        // Lakukan perpanjangan pada objek Transaction (validasi internal dilakukan di sana)
+        $additionalFee = $trx->extend($extraDays, $newPrice, $now);
+
+        // Simpan transaksi
+        $this->transactions->save($trx);
+
+        return ['trx' => $trx, 'additionalFee' => $additionalFee];
     }
 
     public function returnMedia(User $user, string $transactionId): Transaction

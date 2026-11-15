@@ -11,6 +11,7 @@ use App\Repositories\MediaRepository;
 use App\Repositories\TransactionRepository;
 use App\Repositories\UserRepository;
 use App\Services\AuthService;
+use App\Services\PriceCalculator;
 use App\Services\RentalService;
 use App\Storage\JsonStorage;
 
@@ -34,7 +35,8 @@ class Application
 
         $view = new View($rootPath . '/views');
         $auth = new AuthService($userRepo);
-        $rentals = new RentalService($mediaRepo, $trxRepo);
+        $priceCalculator = new PriceCalculator();
+        $rentals = new RentalService($mediaRepo, $trxRepo, $priceCalculator);
 
         $catalog = new CatalogController($view, $auth, $mediaRepo);
         $authCtl = new AuthController($view, $auth, $userRepo, $trxRepo, $mediaRepo);
@@ -53,6 +55,7 @@ class Application
             'POST upgrade-plan' => [$authCtl, 'upgradePlan'],
             'GET rentals' => [$rental, 'myRentals'],
             'POST rent' => [$rental, 'rent'],
+            'POST extend-rental' => [$rental, 'extend'],
             'POST return' => [$rental, 'giveBack'],
             'GET admin' => [$admin, 'dashboard'],
             'GET admin-edit' => [$admin, 'editMediaForm'],

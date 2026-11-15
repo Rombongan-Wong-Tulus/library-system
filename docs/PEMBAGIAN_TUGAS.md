@@ -115,6 +115,7 @@ Ini nama method dan data yang dipakai anggota lain. **Jangan ubah tanpa memberi 
 | A | Nama field JSON: `id, type, title, author, basePrice, stock, description, extra` | semua |
 | B | `MediaRepository::all() / find($id) / save($media) / delete($id) / nextId()` | C |
 | B | `RentalService::rent(User, string $mediaId, int $days): Transaction` | C |
+| B | `RentalService::extendRental(User, string $transactionId, int $extraDays, DateTimeImmutable $now): array` | C |
 | B | `RentalService::returnMedia(User, string $trxId): Transaction` | C |
 | B | `AuthService::register / login / logout / currentUser` | C |
 | C | `BaseController::render($view, array $data)` | D |
