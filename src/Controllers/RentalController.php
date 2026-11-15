@@ -10,6 +10,7 @@ use App\Repositories\MediaRepository;
 use App\Repositories\TransactionRepository;
 use App\Services\AuthService;
 use App\Services\RentalService;
+use DateTimeImmutable;
 
 class RentalController extends BaseController
 {
@@ -28,9 +29,17 @@ class RentalController extends BaseController
         $user = $this->requireLogin();
         $rows = [];
         foreach (array_reverse($this->transactions->byUser($user->getId())) as $trx) {
-            $rows[] = ['trx' => $trx, 'media' => $this->media->find($trx->getMediaId())];
-        }
-        $this->render('rental/index', ['rows' => $rows]);
+         $media = $this->media->find($trx->getMediaId());
+         $maxExtendDays = ($trx->isActive() && !$trx->isOverdue())
+             ? max(0, 14 - $trx->getTotalDays())
+             : 0;
+         $rows[] = [
+            'trx' => $trx,
+            'media' => $media,
+             'maxExtendDays' => $maxExtendDays,
+        ];
+    }
+     $this->render('rental/index', ['rows' => $rows]);
     }
 
     public function rent(): void
@@ -89,4 +98,28 @@ class RentalController extends BaseController
         }
         $this->redirect('rentals');
     }
+
+    public function extend(): void
+{
+    $user = $this->requireLogin();
+
+    try {
+        $transactionId = (string) ($_POST['transaction_id'] ?? '');
+        $extraDays = (int) ($_POST['extra_days'] ?? 0);
+
+        $now = new DateTimeImmutable();
+        $result = $this->rentals->extendRental($user, $transactionId, $extraDays, $now);
+        $additionalFee = $result['additionalFee'];
+
+        $msg = 'Masa sewa berhasil diperpanjang.';
+        if ($additionalFee > 0) {
+            $msg .= ' Biaya tambahan ' . $this->view->rupiah($additionalFee) . '.';
+        }
+        Session::flash('success', $msg);
+        $this->redirect('rentals');
+    } catch (RentalException $e) {
+        Session::flash('error', $e->getMessage());
+        $this->redirect('rentals');
+    }
+}
 }
