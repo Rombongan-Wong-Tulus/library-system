@@ -63,6 +63,30 @@ class AuthService
         return $user;
     }
 
+    public function changePassword(User $user, string $old, string $new, string $confirm): void
+    {
+        $errors = [];
+
+        if (!$user->verifyPassword($old)) {
+            $errors[] = 'Password lama salah.';
+        }
+        if (strlen($new) < 6) {
+            $errors[] = 'Password baru minimal 6 karakter.';
+        }
+        if ($new === $old) {
+            $errors[] = 'Password baru harus berbeda dari password lama.';
+        }
+        if ($new !== $confirm) {
+            $errors[] = 'Konfirmasi password tidak sama.';
+        }
+        if ($errors !== []) {
+            throw new ValidationException($errors);
+        }
+
+        $user->setPasswordHash(password_hash($new, PASSWORD_DEFAULT));
+        $this->users->save($user);
+    }
+
     public function logout(): void
     {
         Session::destroy();

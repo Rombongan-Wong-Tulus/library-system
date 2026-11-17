@@ -27,6 +27,10 @@ Semua tangkapan layar diambil dengan data seed bawaan. Berkas ada di [`docs/scre
 |---|---|
 | ![Daftar sewa pengguna beserta aksi pengembalian](docs/screenshots/07-sewa-saya.png) | ![Profil pengguna dengan kartu upgrade Premium](docs/screenshots/08-profil.png) |
 
+| Ubah password |
+|---|
+| ![Form ubah password dengan indikator kekuatan password](docs/screenshots/14-ubah-password.png) |
+
 ### Panel admin
 
 | Dashboard | Edit media |
