@@ -310,7 +310,7 @@ function initAdminExtraLabel() {
 
 /* ---------- Indikator Kekuatan Password ---------- */
 function initPasswordStrength() {
-    const pwInput = document.getElementById('register-password');
+    const pwInput = document.getElementById('register-password') || document.getElementById('change-password-new');
     const fill = document.getElementById('meter-fill');
     const text = document.getElementById('meter-text');
     if (!pwInput || !fill || !text) return;
