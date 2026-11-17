@@ -54,12 +54,6 @@
     </section>
 
     <section class="panel">
-        <h2>Ubah Password</h2>
-        <p class="small">Klik tombol di bawah untuk mengubah kata sandi akun kamu.</p>
-        <a class="btn" href="index.php?r=change-password">Ubah Password</a>
-    </section>
-
-    <section class="panel">
         <h2>Riwayat Sewa Singkat</h2>
         <?php if ($recentTransactions === []): ?>
             <p class="empty">Belum ada riwayat transaksi sewa.</p>
