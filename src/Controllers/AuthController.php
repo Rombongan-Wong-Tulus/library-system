@@ -127,4 +127,34 @@ class AuthController extends BaseController
         Session::flash('success', 'Selamat! Akun kamu berhasil di-upgrade ke paket Premium. Nikmati diskon 20% dan batas 5 pinjaman!');
         $this->redirect('profile');
     }
+
+    /** Tampilkan form ubah password. */
+    public function showChangePassword(): void
+    {
+        $this->requireLogin();
+        $this->render('auth/change-password');
+    }
+
+    /** Ganti password pengguna yang sedang login. */
+    public function changePassword(): void
+    {
+        $user = $this->requireLogin();
+
+        try {
+            $this->auth->changePassword(
+                $user,
+                (string) ($_POST['current_password'] ?? ''),
+                (string) ($_POST['password'] ?? ''),
+                (string) ($_POST['confirm'] ?? '')
+            );
+            session_regenerate_id(true);
+            Session::flash('success', 'Password berhasil diubah.');
+            $this->redirect('profile');
+        } catch (ValidationException $e) {
+            foreach ($e->getErrors() as $msg) {
+                Session::flash('error', $msg);
+            }
+            $this->redirect('profile');
+        }
+    }
 }
