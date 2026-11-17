@@ -85,6 +85,10 @@ Langkah rinci:
 | GET | `register` | `AuthController::showRegister` | publik |
 | POST | `register` | `AuthController::register` | publik |
 | POST | `logout` | `AuthController::logout` | login |
+| GET | `profile` | `AuthController::profile` | login |
+| GET | `change-password` | `AuthController::showChangePassword` | login |
+| POST | `change-password` | `AuthController::changePassword` | login |
+| POST | `upgrade-plan` | `AuthController::upgradePlan` | login |
 | GET | `rentals` | `RentalController::myRentals` | login |
 | POST | `rent` | `RentalController::rent` | login (bukan admin) |
 | POST | `return` | `RentalController::giveBack` | login |
@@ -199,6 +203,15 @@ Titik polimorfisme di alur ini:
 
 ![Pesan sukses setelah perpanjangan](screenshots/13-perpanjang-berhasil.png)
 
+### 4.8 Ubah password
+
+1. Dari halaman profil, pengguna yang sudah login membuka form `GET change-password`.
+2. Form mengirim password saat ini, password baru, dan konfirmasi melalui `POST change-password` dengan token CSRF.
+3. `AuthService::changePassword()` memverifikasi password saat ini, memastikan password baru minimal 6 karakter, berbeda dari password lama, dan cocok dengan konfirmasi.
+4. Password baru disimpan dalam bentuk hash. Session ID diperbarui, lalu pengguna diarahkan kembali ke profil dengan pesan sukses.
+5. Jika validasi gagal, password tidak berubah dan pesan kesalahan ditampilkan di profil.
+
+![Form ubah password](screenshots/14-ubah-password.png)
 
 ## 5. Alur data (penyimpanan)
 
